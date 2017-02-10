@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.rawgit.com/SaraKaoru/Repository/master/bootstrapform/assets/css/style.css">
+<link rel="stylesheet" href="//cdn.rawgit.com/SaraKaoru/Repository/master/bootstrapform/assets/css/form-elements.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+<style type="text/css">
+.form-box {
+    margin-left: 12%;
+}
+body{background: #19b9e7 none repeat scroll 0 0;}
+.entry:not(:first-of-type)
+{
+    margin-top: 10px;
+}
+.entry{float:left;}
+.glyphicon
+{
+    font-size: 12px;
+}
+col-xs-1,col-xs-2,.col-xs-3,col-xs-4{
+    padding-left:10px;padding-right:10px;
+}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
+<script>
+$(function()
+{
+    $(document).on('click', '.btn-add', function(e)
+    {
+        e.preventDefault();
+        var controlForm = $('#detail'),
+            currentEntry = $(this).parents('.entry:first'),
+            newEntry = $(currentEntry.clone()).appendTo(controlForm);
+        newEntry.find('input').val('');
+        controlForm.find('.entry:not(:last) .btn-add')
+            .removeClass('btn-add').addClass('btn-remove')
+            .removeClass('btn-success').addClass('btn-danger')
+            .html('<span class="glyphicon glyphicon-minus"></span>');
+    }).on('click', '.btn-remove', function(e)
+    {
+    $(this).parents('.entry:first').remove();
+
+    e.preventDefault();
+    return false;
+  });
+    $("#formsubmit").click(function(e){
+    var validates=$("#buyForm")[0].checkValidity();
+    if(validates){
+    e.preventDefault(); //remove the default button action
+    $('form').hide();
+    $('#output').html('Uploading...');
+    google.script.run.withSuccessHandler(fileUploaded)
+    .uploadFiles(this.parentNode);
+    }
+    else{
+       alert("All fields are required");
+    }
+    return false;
+    });
+    
+});
+
+
+
+function fileUploaded(status) {
+$('#output').html(status);
+}
+</script>
+<body>
+  <div class='container'>
+    <div class="row">
+      <div class="col-sm-9 col-sm-offset-3 form-box">
+        <div class="form-top">
+          <div class="form-top-left">
+            <h3>Title</h3>
+              <p>Description</p>
+          </div>
+          <div class="form-top-right">
+            <i class="fa fa-envelope"></i>
+          </div>
+          </div>
+          <div class="form-bottom contact-form">
+            <form role="form" id="buyForm" action="assets/contact.php" method="post">
+              <div class="form-group">
+                <label for="contact-nickname">Nickname</label>
+                <input required name="nickname" placeholder="Nickname" class="contact-nickname form-control" id="contact-nickname" type="text">
+              </div>
+              <div class="form-group">
+                <label  for="contact-name">Name</label>
+                <input required  name="name" placeholder="Name" class="contact-name form-control" id="contact-name" type="text">
+              </div>
+              <div class="form-group">
+                <label  for="contact-email">Email</label>
+                <input required  name="email" placeholder="Email..." class="contact-email form-control" id="contact-email" type="text">
+              </div>
+              <div class="form-group">
+                <label for="contact-tel">Tel</label>
+                <input required  name="tel" placeholder="Tel" class="contact-tel form-control" id="contact-tel" type="text">
+              </div>
+              <div class="form-group">
+                <label for="contact-addr">Addr</label>
+                <textarea required  name="addr" placeholder="Addr" class="contact-addr form-control" id="contact-addr"></textarea>
+              </div>
+               <div class="form-group" id="detail" >
+                <label for="detail">Detail</label>
+                <div class="entry">
+                <div class="col-xs-3" style="padding-left:0">
+                  <input class="form-control" name="itemname" type="text" placeholder="item name" />
+                </div>
+                <div class="col-xs-2 has-feedback">
+                  <input class="form-control" name="itemsize" type="text" placeholder="size" />
+                </div>
+                <div class="col-xs-2 has-feedback">
+                  <input class="form-control" name="itemcolor" type="text" placeholder="color" />
+                </div>
+                <div class="col-xs-4 has-feedback">
+                  <input class="form-control" name="itemurl" type="text" placeholder="URL" />
+                </div>
+                <div class="col-xs-1 has-feedback">
+                  <span class="input-group-btn">
+                    <button class="btn cancel btn-success btn-add" type="button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </span>
+                </div>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label for="exampleInputFile">picture</label>
+                  <input name="myFile" required type="file" class="form-control-file" id="exampleInputFile">
+              </div>
+              <button type="button" class="btn btn-primary" id="formsubmit">Submit</button>
+        </form>
+        <div id="output"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
